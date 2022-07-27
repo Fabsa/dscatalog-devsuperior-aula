@@ -7,12 +7,15 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;//vai registrar como um componente que vai participar do sistema de injeção do spring  
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsystempro.dscatalog.dto.CategoryDTO;
 import com.devsystempro.dscatalog.entities.Category;
 import com.devsystempro.dscatalog.repositories.CategoryRepository;
+import com.devsystempro.dscatalog.services.exceptions.DatabaseException;
 import com.devsystempro.dscatalog.services.exceptions.ResourceNotFoundException;
 
 
@@ -57,8 +60,22 @@ public class CategoryService {//gerenciar os objetos do carteroryservice e o spr
 	     }
 	     catch(EntityNotFoundException e) {
 	    	throw new ResourceNotFoundException("Id not Found"+id); 
-	     }	
-	   }	
+	     }	    
+	     
+	   }
+       //service DELETE
+	    
+		public void delete(Long id) {
+			try {
+		repository.deleteById(id);	
+		
+			}catch(EmptyResultDataAccessException e) {
+				  throw new ResourceNotFoundException("Id not found"+id);
+			}
+			catch(DataIntegrityViolationException e) {
+				throw new DatabaseException("Integraty violation ");
+			}
+		}	
 	}
 
 
