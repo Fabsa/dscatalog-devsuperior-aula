@@ -1,14 +1,14 @@
 package com.devsystempro.dscatalog.services;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;//vai registrar como um componente que vai participar do sistema de injeção do spring  
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,17 +25,16 @@ public class CategoryService {//gerenciar os objetos do carteroryservice e o spr
 	@Autowired
 	private CategoryRepository repository;//responsavel por fazeer o acesso ao banco de dados.
 	
-	
-	//busca todos cas categorias
+	//busca todos cas categorias com controle de quantidades de itens por pagina
 	
 	    @Transactional(readOnly=true)//readOnly evita de travar o banco em uma transação
-		public List<CategoryDTO>findAll(){		
+		public Page<CategoryDTO>findAllPaged(PageRequest pageRequest){	//pega todos os registros	
 		//2° forma  com uso de expressão çambda
-	      List<Category>list = repository.findAll();
-		  return list.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());//stream permite trabalhar com funçoes de alta ordem, onde pega cada elemento da lista original e aplicanado nele um CategoryDTO(x)
+	      Page<Category>list = repository.findAll(pageRequest);
+		  return list.map(x -> new CategoryDTO(x));//stream permite trabalhar com funçoes de alta ordem, onde pega cada elemento da lista original e aplicanado nele um CategoryDTO(x)
 					
 	}
-	    //busca todas categorias por ID
+	    //busca todas categorias por ID;
 	    
 	    @Transactional(readOnly=true)
 		public CategoryDTO findById(Long id) {			
