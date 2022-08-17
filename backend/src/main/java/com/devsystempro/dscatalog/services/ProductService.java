@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;//vai registrar como um componente que vai participar do sistema de injeção do spring  
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,9 +33,9 @@ public class ProductService {//gerenciar os objetos do carteroryservice e o spri
 	//busca todos cas categorias com controle de quantidades de itens por pagina
 	
 	    @Transactional(readOnly=true)//readOnly evita de travar o banco em uma transação
-		public Page<ProductDTO>findAllPaged(PageRequest pageRequest){	//pega todos os registros	
+		public Page<ProductDTO>findAllPaged(Pageable pegeable){	//pega todos os registros	
 		//2° forma  com uso de expressão çambda
-	      Page<Product>list = repository.findAll(pageRequest);
+	      Page<Product>list = repository.findAll(pegeable);
 		  return list.map(x -> new ProductDTO(x));//stream permite trabalhar com funçoes de alta ordem, onde pega cada elemento da lista original e aplicanado nele um ProductDTO(x)
 					
 	}
